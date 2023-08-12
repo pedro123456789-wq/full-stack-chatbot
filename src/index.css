@@ -17,11 +17,8 @@ code {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  min-width: 80px;
-  min-height: 80px;
-  border-radius: 100px;
-  background: url("./assets/avatar.jpg");
-  background-size: cover;
+  background: transparent;
+  border: none;
 }
 
 .chat-button:hover {
@@ -86,7 +83,9 @@ code {
   left: 10px;
   right: 10px;
   top: 150px;
-  height: 380px;
+  max-height: 380px;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .chat-message-container {
@@ -107,7 +106,8 @@ code {
 
 .user-message {
   background: #9b59b6;
-  margin-left: 120px;
+  margin-left: 95px;
+  max-width: 200px !important;
 }
 
 .chat-avatar {
@@ -118,8 +118,41 @@ code {
   padding-top: 8px;
   padding-left: 10px;
   padding-right: 5px;
+  word-break: break-word;
 }
 
+.option-container {
+  display: flex;
+  flex-direction: row;
+  padding: 3px;
+  color: white;
+}
+
+.option-button {
+  background: #3498db;
+  border-radius: 10px;
+  border: none;
+  margin: 3px;
+}
+
+.option-button:hover {
+  cursor: pointer;
+  background: #2ecc71;
+}
+
+.option-button.disabled {
+  background: rgb(129, 180, 214) !important;
+  cursor: default;
+}
+
+.option-text {
+  font-size: 0.75rem;
+  margin-left: 10px;
+}
+
+.option-text.selected {
+  color: darkblue !important;
+}
 .controls-container {
   position: absolute;
   background: white;
@@ -157,3 +190,29 @@ code {
 p {
   margin: 0;
 }
+
+/* scroll bar styling */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #3498db;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #9b59b6;
+}
+
+/* animations */
+
+/* breakpoints for responsiveness */
