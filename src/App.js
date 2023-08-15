@@ -5,8 +5,8 @@ import ChatMessageText from "./Components/chatMessageText";
 import ChatMessageChoice from "./Components/chatMessageChoice";
 
 // TODO:
-// implement choice inputs
 // add animations and breakpoints
+// build llm model: https://www.google.com/search?q=best+open+source+llm&sca_esv=556685652&sxsrf=AB5stBgoKRvVwY-jRhlhhAHHXQB_YCxeUg%3A1692000239087&source=hp&ei=79_ZZMiBA4mhkdUP5MS_oA8&iflsig=AD69kcEAAAAAZNnt_zWwWpVqKmQ-lH9om-dzaLjOIGmC&ved=0ahUKEwiItdWJ2NuAAxWJUKQEHWTiD_QQ4dUDCAk&uact=5&oq=best+open+source+llm&gs_lp=Egdnd3Mtd2l6IhRiZXN0IG9wZW4gc291cmNlIGxsbTIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgARIwyBQAFj9HnADeACQAQCYAd4BoAGaHKoBBjAuMjIuMbgBA8gBAPgBAcICBRAuGIAEwgILEC4YgAQYxwEY0QPCAgsQLhiABBjHARivAcICBxAjGIoFGCfCAgQQIxgnwgIIEAAYigUYkQLCAgcQABiKBRhDwgIIEAAYgAQYyQPCAggQABiKBRiSA8ICDhAuGIoFGMcBGNEDGJECwgIHEAAYgAQYCsICChAAGIAEGMkDGAo&sclient=gws-wiz#fpstate=ive&vld=cid:738a86cf,vid:hMJgdVJWQRU
 
 // LOGIC:
 // store messages as dictionaries in chatMessages state variable
