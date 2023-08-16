@@ -4,9 +4,13 @@ import { FaBook, FaClock, FaQuestion, FaRegPaperPlane } from "react-icons/fa";
 import ChatMessageText from "./Components/chatMessageText";
 import ChatMessageChoice from "./Components/chatMessageChoice";
 
+const llmServerUrl = "http://localhost:8080"; //server url where llm is hosted - change in production
+
 // TODO:
 // add animations and breakpoints
-// build llm model: https://www.google.com/search?q=best+open+source+llm&sca_esv=556685652&sxsrf=AB5stBgoKRvVwY-jRhlhhAHHXQB_YCxeUg%3A1692000239087&source=hp&ei=79_ZZMiBA4mhkdUP5MS_oA8&iflsig=AD69kcEAAAAAZNnt_zWwWpVqKmQ-lH9om-dzaLjOIGmC&ved=0ahUKEwiItdWJ2NuAAxWJUKQEHWTiD_QQ4dUDCAk&uact=5&oq=best+open+source+llm&gs_lp=Egdnd3Mtd2l6IhRiZXN0IG9wZW4gc291cmNlIGxsbTIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgARIwyBQAFj9HnADeACQAQCYAd4BoAGaHKoBBjAuMjIuMbgBA8gBAPgBAcICBRAuGIAEwgILEC4YgAQYxwEY0QPCAgsQLhiABBjHARivAcICBxAjGIoFGCfCAgQQIxgnwgIIEAAYigUYkQLCAgcQABiKBRhDwgIIEAAYgAQYyQPCAggQABiKBRiSA8ICDhAuGIoFGMcBGNEDGJECwgIHEAAYgAQYCsICChAAGIAEGMkDGAo&sclient=gws-wiz#fpstate=ive&vld=cid:738a86cf,vid:hMJgdVJWQRU
+// host llm server
+// turn app into embeddable script element
+// add option to quit in second menu
 
 // LOGIC:
 // store messages as dictionaries in chatMessages state variable
@@ -83,92 +87,137 @@ function App() {
     }
 
     if (userMessage.tag === "menu->question_input") {
-      // TODO: use large language model with custom knowledge base to answer question
+      // use llm hosted in server to generate response to the user's question
+      let botReply = "";
 
+      fetch(`${llmServerUrl}/reply`, {
+        method: "GET",
+        headers: {
+          prompt: userMessage.text,
+        },
+      })
+        .then((resp) => {
+          const data = resp.json();
+
+          if (data.success) {
+            botReply = data.message;
+          } else {
+            botReply = "Sorry, I can't help you with that";
+          }
+        })
+        .catch((err) => {
+          botReply = "Internal server error";
+        });
+
+      //show response to the user and ask them if they want to do anything else
       addBotMessage([
         {
           sender: "bot",
           type: "text",
-          text: "Demo answer",
-          tag: "question_answer",
+          text: botReply,
+          tag: "question_input->bot_reply",
         },
-      ]);
-
-      // todo: ask if user wants to re-start conversation
-    }
-
-    // if the user selects book a call in the first choice section
-    if (userMessage.tag === "menu" && userMessage.text === "Book a call") {
-      addBotMessage([
         {
           sender: "bot",
           type: "text",
-          text: "Ok, what is your name?",
-          tag: "menu->name_input",
+          text: "Is there anything else you want to do?",
+          tag: "_",
         },
-      ]);
-    }
 
-    if (userMessage.tag === "menu->name_input") {
-      setAnswers([
-        ...answers,
-        {
-          tag: userMessage.tag,
-          value: userMessage.text,
-        },
-      ]);
-
-      addBotMessage([
-        {
-          sender: "bot",
-          type: "text",
-          text: "Thanks, please enter your email address",
-          tag: "menu->email_input",
-        },
-      ]);
-    }
-
-    if (userMessage.tag === "menu->email_input") {
-      // TODO: get time slots available using the callendly api
-      setAnswers([
-        ...answers,
-        {
-          tag: userMessage.tag,
-          value: userMessage.text,
-        },
-      ]);
-
-      addBotMessage([
-        {
-          sender: "bot",
-          type: "text",
-          text: "Please select one of the available time slots",
-          tag: "time_slots_text",
-        },
+        //send user back to the menu
+        //this works because the tag of this question is menu
+        //the tag attribute is a clever way of making logic easy to implement in this bot framework
         {
           sender: "bot",
           type: "choice",
-          tag: "menu->time_slots",
+          tag: "menu",
           options: [
             {
-              text: "05/08/2023 16:00",
-              icon: <FaClock />,
+              text: "Ask another question",
+              icon: <FaQuestion />,
             },
             {
-              text: "07/08/2023 17:00",
-              icon: <FaClock />,
-            },
-            {
-              text: "10/08/2023 18:00",
-              icon: <FaClock />,
+              text: "Book a call",
+              icon: <FaBook />,
             },
           ],
         },
       ]);
+
+      // if the user selects book a call in the first choice section
+      if (userMessage.tag === "menu" && userMessage.text === "Book a call") {
+        addBotMessage([
+          {
+            sender: "bot",
+            type: "text",
+            text: "Ok, what is your name?",
+            tag: "menu->name_input",
+          },
+        ]);
+      }
+
+      if (userMessage.tag === "menu->name_input") {
+        setAnswers([
+          ...answers,
+          {
+            tag: userMessage.tag,
+            value: userMessage.text,
+          },
+        ]);
+
+        addBotMessage([
+          {
+            sender: "bot",
+            type: "text",
+            text: "Thanks, please enter your email address",
+            tag: "menu->email_input",
+          },
+        ]);
+      }
+
+      if (userMessage.tag === "menu->email_input") {
+        // TODO: get time slots available using the callendly api
+        setAnswers([
+          ...answers,
+          {
+            tag: userMessage.tag,
+            value: userMessage.text,
+          },
+        ]);
+
+        addBotMessage([
+          {
+            sender: "bot",
+            type: "text",
+            text: "Please select one of the available time slots",
+            tag: "time_slots_text",
+          },
+          {
+            sender: "bot",
+            type: "choice",
+            tag: "menu->time_slots",
+            options: [
+              {
+                text: "05/08/2023 16:00",
+                icon: <FaClock />,
+              },
+              {
+                text: "07/08/2023 17:00",
+                icon: <FaClock />,
+              },
+              {
+                text: "10/08/2023 18:00",
+                icon: <FaClock />,
+              },
+            ],
+          },
+        ]);
+      }
     }
 
     if (userMessage.tag === "menu->time_slots") {
       // TODO: use callendly api to create booking
+
       addBotMessage([
         {
           sender: "bot",
@@ -241,12 +290,18 @@ function App() {
               {chatMessages.map((message) => {
                 // depending on the author of the message and its type use different colours and avatars
                 if (message.type === "text") {
-                  return <ChatMessageText message={message} />;
+                  return (
+                    <ChatMessageText
+                      message={message}
+                      key={chatMessages.indexOf(message)}
+                    />
+                  );
                 } else if (message.type === "choice") {
                   return (
                     <ChatMessageChoice
                       message={message}
                       addUserMessage={addUserMessage}
+                      key={chatMessages.indexOf(message)}
                     />
                   );
                 }

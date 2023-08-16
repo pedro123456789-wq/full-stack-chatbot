@@ -1,8 +1,6 @@
 // component used to show choice message (using buttons) in the chat
 import { useState } from "react";
 
-// TODO: retain state when window is closed
-
 function ChatMessageChoice({ message, addUserMessage }) {
   // message: {
   //  sender: 'bot',
@@ -32,6 +30,7 @@ function ChatMessageChoice({ message, addUserMessage }) {
             class={`option-button ${!isOptionEnabled && "disabled"}`}
             onClick={() => selectOption(option)}
             disabled={!isOptionEnabled} //after selecting an option, the buttons must become disabled to prevent user from selecting multiple options
+            key={message.options.indexOf(option)}
           >
             <div className="option-container">
               {option.icon != null && option.icon}

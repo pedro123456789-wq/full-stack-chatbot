@@ -191,8 +191,7 @@ p {
   margin: 0;
 }
 
-/* scroll bar styling */
-
+/* === scroll bar styling === */
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
@@ -213,6 +212,6 @@ p {
   background: #9b59b6;
 }
 
-/* animations */
+/* === animations ===  */
 
 /* breakpoints for responsiveness */
